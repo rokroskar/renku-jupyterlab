@@ -7,6 +7,10 @@ import {
 } from '@jupyterlab/apputils';
 
 import {
+  INotebookTracker
+} from '@jupyterlab/notebook';
+
+import {
   Widget
 } from '@phosphor/widgets';
 
@@ -19,10 +23,11 @@ import '../style/index.css';
 const extension: JupyterLabPlugin<void> = {
   id: 'renku-jupyterlab',
   autoStart: true,
-  requires: [ICommandPalette],
-  activate: (app: JupyterLab, palette: ICommandPalette) => {
+  requires: [ICommandPalette, INotebookTracker],
+  activate: (app: JupyterLab, palette: ICommandPalette, notebooks: INotebookTracker) => {
     console.log('JupyterLab extension renku-jupyterlab is activated!');
     console.log('ICommandPalette:', palette);
+
 
   // Create a single widget
   let widget: Widget = new Widget();
@@ -35,12 +40,15 @@ const extension: JupyterLabPlugin<void> = {
   app.commands.addCommand(command, {
     label: 'Run notebook with renku',
     execute: () => {
-      if (!widget.isAttached) {
-        // Attach the widget to the main work area if it's not there
-        app.shell.addToMainArea(widget);
-      }
+      // if (!widget.isAttached) {
+      //   // Attach the widget to the main work area if it's not there
+      //   app.shell.addToMainArea(widget);
+      // }
+      const nbWidget = notebooks.currentWidget;
+      console.log('current notebook: ', nbWidget)
+
       // Activate the widget
-      app.shell.activateById(widget.id);
+      // app.shell.activateById(widget.id);
     }
   });
 
